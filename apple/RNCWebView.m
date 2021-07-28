@@ -309,6 +309,7 @@ static NSDictionary* customCertificatesForHost;
 #endif // !TARGET_OS_OSX
     _webView.allowsLinkPreview = _allowsLinkPreview;
     [_webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:nil];
+    [_webView addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:nil];
     _webView.allowsBackForwardNavigationGestures = _allowsBackForwardNavigationGestures;
 
     if (_userAgent) {
@@ -344,6 +345,7 @@ static NSDictionary* customCertificatesForHost;
         [_webView.configuration.userContentController removeScriptMessageHandlerForName:HistoryShimName];
         [_webView.configuration.userContentController removeScriptMessageHandlerForName:MessageHandlerName];
         [_webView removeObserver:self forKeyPath:@"estimatedProgress"];
+        [_webView removeObserver:self forKeyPath:@"title"];
         [_webView removeFromSuperview];
 #if !TARGET_OS_OSX
         _webView.scrollView.delegate = nil;
@@ -423,6 +425,12 @@ static NSDictionary* customCertificatesForHost;
             [event addEntriesFromDictionary:@{@"progress":[NSNumber numberWithDouble:self.webView.estimatedProgress]}];
             _onLoadingProgress(event);
         }
+    }else if ([keyPath isEqual:@"title"] && object == self.webView) {
+      if(_onLoadingProgress){
+           NSMutableDictionary<NSString *, id> *event = [self baseEvent];
+          [event addEntriesFromDictionary:@{@"title":self.webView.title}];
+          _onReceivedTitle(event);
+      }
     }else{
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -554,9 +562,9 @@ static NSDictionary* customCertificatesForHost;
         }
         [_webView loadHTMLString:html baseURL:baseURL];
         return;
-    } 
+    }
     //Add cookie for subsequent resource requests sent by page itself, if cookie was set in headers on WebView
-    NSString *headerCookie = [RCTConvert NSString:_source[@"headers"][@"cookie"]]; 
+    NSString *headerCookie = [RCTConvert NSString:_source[@"headers"][@"cookie"]];
     if(headerCookie) {
       NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:headerCookie,@"Set-Cookie",nil];
       NSURL *urlString = [NSURL URLWithString:_source[@"uri"]];

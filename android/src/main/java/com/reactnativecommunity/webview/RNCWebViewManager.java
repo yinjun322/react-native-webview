@@ -72,14 +72,7 @@ import com.facebook.react.uimanager.events.ContentSizeChangeEvent;
 import com.facebook.react.uimanager.events.Event;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.reactnativecommunity.webview.RNCWebViewModule.ShouldOverrideUrlLoadingLock.ShouldOverrideCallbackState;
-import com.reactnativecommunity.webview.events.TopLoadingErrorEvent;
-import com.reactnativecommunity.webview.events.TopHttpErrorEvent;
-import com.reactnativecommunity.webview.events.TopLoadingFinishEvent;
-import com.reactnativecommunity.webview.events.TopLoadingProgressEvent;
-import com.reactnativecommunity.webview.events.TopLoadingStartEvent;
-import com.reactnativecommunity.webview.events.TopMessageEvent;
-import com.reactnativecommunity.webview.events.TopShouldStartLoadWithRequestEvent;
-import com.reactnativecommunity.webview.events.TopRenderProcessGoneEvent;
+import com.reactnativecommunity.webview.events.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -604,6 +597,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     if (export == null) {
       export = MapBuilder.newHashMap();
     }
+    export.put(TopReceivedTitleEvent.EVENT_NAME, MapBuilder.of("registrationName", "onReceivedTitle"));
     export.put(TopLoadingProgressEvent.EVENT_NAME, MapBuilder.of("registrationName", "onLoadingProgress"));
     export.put(TopShouldStartLoadWithRequestEvent.EVENT_NAME, MapBuilder.of("registrationName", "onShouldStartLoadWithRequest"));
     export.put(ScrollEventType.getJSEventName(ScrollEventType.SCROLL), MapBuilder.of("registrationName", "onScroll"));
@@ -1125,6 +1119,18 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     public RNCWebChromeClient(ReactContext reactContext, WebView webView) {
       this.mReactContext = reactContext;
       this.mWebView = webView;
+    }
+
+    @Override
+    public void onReceivedTitle(WebView view, String title) {
+      super.onReceivedTitle(view, title);
+      WritableMap event = Arguments.createMap();
+      event.putString("title", title);
+      ((RNCWebView) view).dispatchEvent(
+        view,
+        new TopReceivedTitleEvent(
+          view.getId(),
+          event));
     }
 
     @Override

@@ -151,6 +151,10 @@ export type WebViewProgressEvent = NativeSyntheticEvent<
   WebViewNativeProgressEvent
 >;
 
+export type WebViewReceivedTitleEvent = NativeSyntheticEvent<
+  WebViewNativeProgressEvent
+>;
+
 export type WebViewNavigationEvent = NativeSyntheticEvent<WebViewNavigation>;
 
 export type ShouldStartLoadRequestEvent = NativeSyntheticEvent<ShouldStartLoadRequest>;
@@ -265,6 +269,7 @@ export interface CommonNativeWebViewProps extends ViewProps {
   onLoadingError: (event: WebViewErrorEvent) => void;
   onLoadingFinish: (event: WebViewNavigationEvent) => void;
   onLoadingProgress: (event: WebViewProgressEvent) => void;
+  onReceivedTitle?: (event: WebViewReceivedTitleEvent) => void;
   onLoadingStart: (event: WebViewNavigationEvent) => void;
   onHttpError: (event: WebViewHttpErrorEvent) => void;
   onMessage: (event: WebViewMessageEvent) => void;
@@ -620,7 +625,7 @@ export interface IOSWebViewProps extends WebViewSharedProps {
    * A Boolean value which, when set to `true`, indicates to WebKit that a WKWebView
    * will only navigate to app-bound domains. Once set, any attempt to navigate away
    * from an app-bound domain will fail with the error “App-bound domain failure.”
-   * 
+   *
    * Applications can specify up to 10 “app-bound” domains using a new
    * Info.plist key `WKAppBoundDomains`.
    * @platform ios
@@ -1040,6 +1045,8 @@ export interface WebViewSharedProps extends ViewProps {
    * Function that is invoked when the `WebView` is loading.
    */
   onLoadProgress?: (event: WebViewProgressEvent) => void;
+
+  onReceivedTitle?: (event: WebViewReceivedTitleEvent) => void;
 
   /**
    * Boolean value that forces the `WebView` to show the loading view
