@@ -427,7 +427,7 @@ static NSDictionary* customCertificatesForHost;
             _onLoadingProgress(event);
         }
     }else if ([keyPath isEqual:@"title"] && object == self.webView) {
-      if(_onLoadingProgress){
+      if(_onReceivedTitle){
            NSMutableDictionary<NSString *, id> *event = [self baseEvent];
           [event addEntriesFromDictionary:@{@"title":self.webView.title}];
           _onReceivedTitle(event);
