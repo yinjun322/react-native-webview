@@ -71,6 +71,7 @@ RCT_EXPORT_VIEW_PROPERTY(automaticallyAdjustContentInsets, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(autoManageStatusBarEnabled, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(hideKeyboardAccessoryView, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(allowsBackForwardNavigationGestures, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(allowsBackForwardNavigationGestures, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(incognito, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(pagingEnabled, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(userAgent, NSString)
@@ -150,6 +151,10 @@ RCT_CUSTOM_VIEW_PROPERTY(showsHorizontalScrollIndicator, BOOL, RNCWebView) {
 
 RCT_CUSTOM_VIEW_PROPERTY(showsVerticalScrollIndicator, BOOL, RNCWebView) {
   view.showsVerticalScrollIndicator = json == nil ? true : [RCTConvert BOOL: json];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(ignoreSilentHardwareSwitch, BOOL, RNCWebView) {
+  view.ignoreSilentHardwareSwitch = json == nil ? true : [RCTConvert BOOL: json];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(keyboardDisplayRequiresUserAction, BOOL, RNCWebView) {
